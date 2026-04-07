@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nature — The Wild Soul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Karla:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bark: #5C3D1E; --sage: #7A8C6E; --sand: #D4B896; --gold: #C8953A; --dusk: #8B7355;
+    --bg: #F5EFE4; --bg-card: #EDE3D0; --bg-nav: rgba(245,239,228,0.9);
+    --text-primary: #2C1A0E; --border: rgba(92,61,30,0.1);
+    --moss: #4A5240; --footer-bg: #2C1A0E; --sky: #A8BFB0; --cream: #F5EFE4;
+  }
+  [data-theme="dark"] {
+    --bg: #1A1109; --bg-card: #2A1C0E; --bg-nav: rgba(20,13,5,0.92);
+    --text-primary: #EDE3D0; --border: rgba(212,184,150,0.12);
+    --bark: #D4A574; --dusk: #A8916F; --sand: #8B6840;
+    --footer-bg: #110B04; --cream: #EDE3D0; --moss: #2E3B2A;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text-primary); font-family: 'Karla', sans-serif; font-weight: 300; overflow-x: hidden; transition: background 0.4s, color 0.4s; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 100; opacity: 0.35; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 1.25rem 3rem; display: flex; align-items: center; justify-content: space-between; background: var(--bg-nav); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transition: background 0.4s; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; color: var(--bark); text-decoration: none; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dusk); text-decoration: none; transition: color 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--bark); }
+  .nav-links a.active { border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+  .theme-toggle { width: 44px; height: 24px; background: var(--border); border: 1px solid var(--border); border-radius: 999px; cursor: pointer; position: relative; padding: 0; outline: none; }
+  .theme-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--bark); transition: transform 0.3s; }
+  [data-theme="dark"] .theme-toggle::after { transform: translateX(20px); background: var(--gold); }
+
+  /* HERO */
+  .nature-hero { background: var(--moss); min-height: 80vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+  .nature-hero-left { display: flex; flex-direction: column; justify-content: center; padding: 9rem 4rem 5rem 3rem; position: relative; z-index: 2; }
+  .nature-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(168,191,176,0.7); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 1s ease 0.2s forwards; }
+  .nature-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 1.05; color: var(--cream); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
+  .nature-title em { font-style: italic; color: var(--gold); }
+  .nature-subtitle { font-family: 'Lora', serif; font-style: italic; font-size: 1.05rem; line-height: 1.8; color: rgba(237,227,208,0.6); max-width: 38ch; opacity: 0; animation: fadeUp 1s ease 0.6s forwards; }
+  .nature-hero-right { position: relative; overflow: hidden; }
+  .nature-hero-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; animation: fadeIn 1.5s ease 0.5s forwards; }
+
+  /* SEASONS STRIP */
+  .seasons { background: var(--footer-bg); padding: 1.5rem 3rem; display: flex; gap: 0; transition: background 0.4s; }
+  .season { flex: 1; text-align: center; padding: 1rem; border-right: 1px solid rgba(212,184,150,0.12); cursor: pointer; transition: background 0.3s; }
+  .season:last-child { border-right: none; }
+  .season:hover { background: rgba(212,184,150,0.04); }
+  .season-icon { font-size: 0.9rem; color: var(--gold); margin-bottom: 0.4rem; }
+  .season-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,239,228,0.35); }
+
+  /* NATURE GRID */
+  .nature-grid-section { max-width: 1200px; margin: 0 auto; padding: 5rem 3rem 7rem; }
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 3rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--text-primary); }
+  .section-link { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage); text-decoration: none; border-bottom: 1px solid var(--sand); padding-bottom: 2px; transition: color 0.3s; }
+  .section-link:hover { color: var(--bark); }
+
+  .nature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem; }
+
+  .nature-card { background: var(--bg-card); border: 1px solid var(--border); padding: 0; overflow: hidden; cursor: pointer; transition: transform 0.3s; text-decoration: none; color: inherit; display: block; position: relative; }
+  .nature-card:hover { transform: translateY(-4px); }
+  .nature-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s; }
+  .nature-card:hover::after { transform: scaleX(1); }
+  .nature-card.large { grid-column: span 2; }
+
+  .nature-card-visual { height: 180px; background: var(--moss); position: relative; overflow: hidden; }
+  .nature-card.large .nature-card-visual { height: 240px; }
+  .nature-card-visual svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .nature-card-body { padding: 1.75rem; }
+  .nature-tag { font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .nature-tag::before { content: ''; width: 14px; height: 1px; background: var(--sage); }
+  .nature-card-title { font-family: 'Lora', serif; font-size: 1.1rem; line-height: 1.4; color: var(--text-primary); margin-bottom: 0.6rem; }
+  .nature-card.large .nature-card-title { font-size: 1.4rem; }
+  .nature-card-excerpt { font-size: 0.83rem; line-height: 1.65; color: var(--dusk); margin-bottom: 1rem; }
+  .nature-meta { font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); }
+
+  /* OBSERVATIONS */
+  .observations { background: var(--bg-card); padding: 6rem 3rem; border-top: 1px solid var(--border); transition: background 0.4s; }
+  .obs-inner { max-width: 1100px; margin: 0 auto; }
+  .obs-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--text-primary); margin-bottom: 3rem; }
+  .obs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border: 1px solid var(--border); }
+  .obs-item { padding: 2rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .obs-item:nth-child(2n) { border-right: none; }
+  .obs-item:nth-last-child(-n+2) { border-bottom: none; }
+  .obs-label { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.75rem; }
+  .obs-text { font-family: 'Lora', serif; font-style: italic; font-size: 1rem; line-height: 1.75; color: var(--text-primary); }
+
+  /* QUOTE */
+  .nature-quote { background: var(--moss); padding: 5rem 3rem; text-align: center; }
+  .nature-quote blockquote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1.3rem, 2.5vw, 2rem); color: var(--cream); max-width: 46ch; margin: 0 auto 1.5rem; line-height: 1.5; }
+  .nature-quote cite { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(168,191,176,0.55); font-style: normal; }
+
+  footer { background: var(--footer-bg); color: rgba(245,239,228,0.4); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; transition: background 0.4s; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--cream); text-decoration: none; }
+  .footer-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,239,228,0.4); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--sand); }
+  .footer-note { font-family: 'Lora', serif; font-style: italic; font-size: 0.78rem; color: rgba(212,184,150,0.4); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nature-hero { grid-template-columns: 1fr; }
+    .nature-hero-left { padding: 7rem 1.5rem 4rem; }
+    .nature-hero-right { height: 260px; }
+    .nature-grid-section { padding: 3rem 1.5rem 5rem; }
+    .nature-grid { grid-template-columns: 1fr; }
+    .nature-card.large { grid-column: auto; }
+    .observations { padding: 4rem 1.5rem; }
+    .obs-grid { grid-template-columns: 1fr; }
+    .obs-item { border-right: none; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">The Wild Soul</a>
+  <ul class="nav-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="nature.html" class="active">Nature</a></li>
+    <li><a href="faith.html">Faith</a></li>
+    <li><a href="adventures.html">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"></button></li>
+  </ul>
+</nav>
+
+<section class="nature-hero">
+  <div class="nature-hero-left">
+    <p class="nature-eyebrow">The wild is the real world</p>
+    <h1 class="nature-title">Nature<br><em>Stories</em></h1>
+    <p class="nature-subtitle">Observations, moments, and quiet revelations from time spent outside — where the real lessons live.</p>
+  </div>
+  <div class="nature-hero-right">
+    <svg class="nature-hero-svg" viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg">
+      <rect width="600" height="700" fill="#4A5240" opacity="0.5"/>
+      <defs>
+        <linearGradient id="ng1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#A8BFB0" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#4A5240" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="700" fill="url(#ng1)"/>
+      <ellipse cx="300" cy="700" rx="420" ry="100" fill="#3A4232" opacity="0.6"/>
+      <!-- Many trees -->
+      <rect x="50" y="150" width="12" height="350" rx="3" fill="#2C1A0E" opacity="0.6"/>
+      <ellipse cx="36" cy="132" rx="48" ry="42" fill="#3A4232" opacity="0.6"/>
+      <ellipse cx="60" cy="118" rx="44" ry="38" fill="#5C6B50" opacity="0.55"/>
+      <rect x="150" y="200" width="9" height="300" rx="3" fill="#2C1A0E" opacity="0.5"/>
+      <ellipse cx="138" cy="185" rx="38" ry="33" fill="#4A5240" opacity="0.5"/>
+      <ellipse cx="158" cy="174" rx="35" ry="30" fill="#6B7A5C" opacity="0.45"/>
+      <rect x="420" y="170" width="11" height="330" rx="3" fill="#2C1A0E" opacity="0.55"/>
+      <ellipse cx="406" cy="154" rx="44" ry="38" fill="#3A4232" opacity="0.55"/>
+      <ellipse cx="430" cy="142" rx="40" ry="35" fill="#5C6B50" opacity="0.5"/>
+      <rect x="520" y="220" width="8" height="260" rx="3" fill="#2C1A0E" opacity="0.45"/>
+      <ellipse cx="508" cy="206" rx="35" ry="30" fill="#4A5240" opacity="0.45"/>
+      <!-- River/water -->
+      <path d="M0 520 Q150 490 300 510 Q450 530 600 500" stroke="#A8BFB0" stroke-width="18" fill="none" opacity="0.2"/>
+      <path d="M0 530 Q150 500 300 520 Q450 540 600 510" stroke="#A8BFB0" stroke-width="10" fill="none" opacity="0.15"/>
+      <!-- Sun -->
+      <circle cx="300" cy="100" r="45" fill="#C8953A" opacity="0.12"/>
+      <circle cx="300" cy="100" r="28" fill="#C8953A" opacity="0.18"/>
+      <circle cx="300" cy="100" r="14" fill="#C8953A" opacity="0.28"/>
+      <!-- Birds -->
+      <path d="M200 160 Q207 153 214 160" stroke="#2C1A0E" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M225 145 Q231 138 237 145" stroke="#2C1A0E" stroke-width="1.5" fill="none" opacity="0.35"/>
+      <path d="M350 130 Q356 123 362 130" stroke="#2C1A0E" stroke-width="1.5" fill="none" opacity="0.35"/>
+      <path d="M375 148 Q380 142 386 148" stroke="#2C1A0E" stroke-width="1.5" fill="none" opacity="0.3"/>
+      <!-- Ground details -->
+      <path d="M100 650 Q108 618 112 645" stroke="#5C6B50" stroke-width="2" fill="none" opacity="0.5"/>
+      <path d="M120 648 Q130 612 133 644" stroke="#7A8C6E" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M460 642 Q468 610 472 640" stroke="#5C6B50" stroke-width="2" fill="none" opacity="0.5"/>
+      <path d="M480 645 Q488 615 491 642" stroke="#7A8C6E" stroke-width="1.5" fill="none" opacity="0.4"/>
+    </svg>
+  </div>
+</section>
+
+<div class="seasons">
+  <div class="season"><div class="season-icon">✦</div><div class="season-label">Rivers</div></div>
+  <div class="season"><div class="season-icon">✦</div><div class="season-label">Mountains</div></div>
+  <div class="season"><div class="season-icon">✦</div><div class="season-label">Forests</div></div>
+  <div class="season"><div class="season-icon">✦</div><div class="season-label">Desert</div></div>
+  <div class="season"><div class="season-icon">✦</div><div class="season-label">Dawn</div></div>
+</div>
+
+<section class="nature-grid-section">
+  <div class="section-header reveal">
+    <h2 class="section-title">From the field</h2>
+    <a href="letters.html" class="section-link">All letters →</a>
+  </div>
+
+  <div class="nature-grid">
+    <a href="letters.html" class="nature-card large reveal">
+      <div class="nature-card-visual">
+        <svg viewBox="0 0 500 240" xmlns="http://www.w3.org/2000/svg">
+          <rect width="500" height="240" fill="#4A5240"/>
+          <ellipse cx="250" cy="260" rx="350" ry="70" fill="#3A4232"/>
+          <path d="M0 180 Q125 140 250 165 Q375 190 500 155" stroke="#A8BFB0" stroke-width="22" fill="none" opacity="0.25"/>
+          <rect x="60" y="40" width="10" height="180" rx="3" fill="#2C1A0E" opacity="0.6"/>
+          <ellipse cx="47" cy="28" rx="42" ry="36" fill="#3A4232" opacity="0.7"/>
+          <ellipse cx="68" cy="18" rx="38" ry="32" fill="#5C6B50" opacity="0.6"/>
+          <rect x="390" y="60" width="8" height="150" rx="3" fill="#2C1A0E" opacity="0.5"/>
+          <ellipse cx="378" cy="48" rx="35" ry="30" fill="#3A4232" opacity="0.6"/>
+          <circle cx="250" cy="55" r="20" fill="#C8953A" opacity="0.2"/>
+          <circle cx="250" cy="55" r="10" fill="#C8953A" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="nature-card-body">
+        <div class="nature-tag">River · Silence</div>
+        <div class="nature-card-title">I sat next to a river for three hours and did absolutely nothing — here is what happened</div>
+        <div class="nature-card-excerpt">We are trained to fill silence. But sitting next to moving water with no phone and nowhere to be — something unexpected starts happening inside you.</div>
+        <div class="nature-meta">8 min read · March 2025</div>
+      </div>
+    </a>
+
+    <a href="letters.html" class="nature-card reveal">
+      <div class="nature-card-visual">
+        <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="240" height="180" fill="#3A4232"/>
+          <rect width="240" height="180" fill="#1A1109" opacity="0.5"/>
+          <circle cx="120" cy="50" r="12" fill="#C8953A" opacity="0.25"/>
+          <circle cx="120" cy="50" r="6" fill="#C8953A" opacity="0.35"/>
+          <circle cx="50" cy="25" r="1.5" fill="#C8953A" opacity="0.5"/>
+          <circle cx="180" cy="30" r="1" fill="#C8953A" opacity="0.4"/>
+          <circle cx="200" cy="60" r="1.5" fill="#C8953A" opacity="0.35"/>
+          <circle cx="30" cy="70" r="1" fill="#C8953A" opacity="0.4"/>
+          <ellipse cx="120" cy="190" rx="200" ry="50" fill="#4A5240" opacity="0.5"/>
+          <rect x="30" y="70" width="8" height="120" rx="2" fill="#2C1A0E" opacity="0.6"/>
+          <ellipse cx="22" cy="60" rx="32" ry="28" fill="#3A4232" opacity="0.7"/>
+          <rect x="185" y="85" width="7" height="100" rx="2" fill="#2C1A0E" opacity="0.5"/>
+          <ellipse cx="176" cy="76" rx="28" ry="24" fill="#4A5240" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="nature-card-body">
+        <div class="nature-tag">Dawn · Mountains</div>
+        <div class="nature-card-title">Making tea on a mountain at dawn</div>
+        <div class="nature-card-excerpt">Some moments you do not photograph. You just live them.</div>
+        <div class="nature-meta">5 min read</div>
+      </div>
+    </a>
+
+    <a href="letters.html" class="nature-card reveal">
+      <div class="nature-card-visual" style="background: #5C6B50;">
+        <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="240" height="180" fill="#5C6B50"/>
+          <ellipse cx="120" cy="190" rx="200" ry="60" fill="#4A5240"/>
+          <rect x="40" y="30" width="9" height="160" rx="3" fill="#2C1A0E" opacity="0.55"/>
+          <ellipse cx="28" cy="18" rx="38" ry="33" fill="#4A5240" opacity="0.6"/>
+          <ellipse cx="48" cy="8" rx="34" ry="30" fill="#6B7A5C" opacity="0.55"/>
+          <rect x="160" y="50" width="8" height="140" rx="3" fill="#2C1A0E" opacity="0.5"/>
+          <ellipse cx="149" cy="39" rx="34" ry="29" fill="#4A5240" opacity="0.55"/>
+          <path d="M80 120 Q120 100 160 115" stroke="#A8BFB0" stroke-width="14" fill="none" opacity="0.22"/>
+        </svg>
+      </div>
+      <div class="nature-card-body">
+        <div class="nature-tag">River · Cold · Alive</div>
+        <div class="nature-card-title">Swimming alone and feeling okay about being alive</div>
+        <div class="nature-card-excerpt">Cold water is the most honest conversation you can have with yourself.</div>
+        <div class="nature-meta">4 min read</div>
+      </div>
+    </a>
+
+    <a href="letters.html" class="nature-card reveal">
+      <div class="nature-card-visual" style="background: #2C3828;">
+        <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="240" height="180" fill="#2C3828"/>
+          <circle cx="120" cy="60" r="35" fill="#C8953A" opacity="0.1"/>
+          <circle cx="120" cy="60" r="20" fill="#C8953A" opacity="0.15"/>
+          <circle cx="120" cy="60" r="8" fill="#C8953A" opacity="0.25"/>
+          <ellipse cx="120" cy="200" rx="200" ry="70" fill="#3A4232"/>
+          <rect x="20" y="80" width="7" height="120" rx="2" fill="#2C1A0E" opacity="0.5"/>
+          <ellipse cx="11" cy="70" rx="28" ry="24" fill="#3A4232" opacity="0.55"/>
+          <rect x="195" y="95" width="6" height="100" rx="2" fill="#2C1A0E" opacity="0.45"/>
+          <ellipse cx="186" cy="86" rx="25" ry="21" fill="#3A4232" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="nature-card-body">
+        <div class="nature-tag">Desert · Night · Silence</div>
+        <div class="nature-card-title">One night in the desert where silence was louder than anything</div>
+        <div class="nature-card-excerpt">Real silence turns the volume up on everything inside you.</div>
+        <div class="nature-meta">6 min read</div>
+      </div>
+    </a>
+
+    <a href="letters.html" class="nature-card reveal">
+      <div class="nature-card-visual">
+        <svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="240" height="180" fill="#4A5240"/>
+          <path d="M0 100 Q60 70 120 90 Q180 110 240 80" stroke="#A8BFB0" stroke-width="28" fill="none" opacity="0.2"/>
+          <path d="M0 115 Q60 85 120 105 Q180 125 240 95" stroke="#A8BFB0" stroke-width="16" fill="none" opacity="0.15"/>
+          <rect x="170" y="30" width="9" height="160" rx="3" fill="#2C1A0E" opacity="0.5"/>
+          <ellipse cx="158" cy="19" rx="38" ry="33" fill="#3A4232" opacity="0.6"/>
+          <ellipse cx="178" cy="9" rx="34" ry="30" fill="#5C6B50" opacity="0.55"/>
+          <circle cx="40" cy="35" r="10" fill="#C8953A" opacity="0.2"/>
+        </svg>
+      </div>
+      <div class="nature-card-body">
+        <div class="nature-tag">Forest · Lost · Found</div>
+        <div class="nature-card-title">I got completely lost and it was the best day</div>
+        <div class="nature-card-excerpt">Sometimes the trail you weren't supposed to take leads somewhere better.</div>
+        <div class="nature-meta">5 min read</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- OBSERVATIONS -->
+  <div class="observations reveal">
+    <div class="obs-inner">
+      <h2 class="obs-title">Small observations from outside</h2>
+      <div class="obs-grid">
+        <div class="obs-item"><div class="obs-label">On water</div><div class="obs-text">"A river doesn't stop moving because rocks are in the way. It finds a new path, or it wears the rock down. Either way, it keeps going."</div></div>
+        <div class="obs-item"><div class="obs-label">On trees</div><div class="obs-text">"A tree doesn't grow straight because conditions are perfect. It grows toward light, even when the light is far away and the ground is hard."</div></div>
+        <div class="obs-item"><div class="obs-label">On silence</div><div class="obs-text">"Silence in nature is never empty. It's full of things that don't need words to be real."</div></div>
+        <div class="obs-item"><div class="obs-label">On time</div><div class="obs-text">"Outside, time moves at the right speed. One hour sitting next to a stream feels longer, and better, than a whole day in a city."</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="nature-quote">
+  <blockquote>"The natural world has been trying to teach us everything we need to know. We just keep not listening."</blockquote>
+  <cite>— Somewhere, sitting under a tree</cite>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">The Wild Soul</a>
+  <ul class="footer-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="faith.html">Faith</a></li>
+    <li><a href="adventures.html">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <p class="footer-note">Written with gratitude · بسم الله</p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+  toggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

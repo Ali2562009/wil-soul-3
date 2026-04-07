@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiet Faith — The Wild Soul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Karla:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bark: #5C3D1E; --sage: #7A8C6E; --sand: #D4B896; --gold: #C8953A; --dusk: #8B7355;
+    --bg: #F5EFE4; --bg-card: #EDE3D0; --bg-nav: rgba(245,239,228,0.9);
+    --text-primary: #2C1A0E; --border: rgba(92,61,30,0.1);
+    --moss: #4A5240; --footer-bg: #2C1A0E; --sky: #A8BFB0; --cream: #F5EFE4;
+    --faith-dark: #1C2A20;
+  }
+  [data-theme="dark"] {
+    --bg: #1A1109; --bg-card: #2A1C0E; --bg-nav: rgba(20,13,5,0.92);
+    --text-primary: #EDE3D0; --border: rgba(212,184,150,0.12);
+    --bark: #D4A574; --dusk: #A8916F; --sand: #8B6840;
+    --footer-bg: #110B04; --cream: #EDE3D0; --moss: #2E3B2A;
+    --faith-dark: #0D1A10;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text-primary); font-family: 'Karla', sans-serif; font-weight: 300; overflow-x: hidden; transition: background 0.4s, color 0.4s; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 100; opacity: 0.35; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 1.25rem 3rem; display: flex; align-items: center; justify-content: space-between; background: var(--bg-nav); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transition: background 0.4s; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; color: var(--bark); text-decoration: none; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dusk); text-decoration: none; transition: color 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--bark); }
+  .nav-links a.active { border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+  .theme-toggle { width: 44px; height: 24px; background: var(--border); border: 1px solid var(--border); border-radius: 999px; cursor: pointer; position: relative; padding: 0; outline: none; }
+  .theme-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--bark); transition: transform 0.3s; }
+  [data-theme="dark"] .theme-toggle::after { transform: translateX(20px); background: var(--gold); }
+
+  /* HERO — dark night sky feel */
+  .faith-hero { background: var(--faith-dark); min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 9rem 3rem 6rem; position: relative; overflow: hidden; }
+  .faith-hero-stars { position: absolute; inset: 0; }
+  .faith-hero-content { position: relative; z-index: 2; max-width: 680px; }
+  .faith-bismillah { font-family: 'Scheherazade New', serif; font-size: 2.2rem; color: rgba(200,149,58,0.6); margin-bottom: 2rem; letter-spacing: 0.05em; opacity: 0; animation: fadeUp 1s ease 0.2s forwards; }
+  .faith-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sky); opacity: 0.6; margin-bottom: 1.25rem; opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
+  .faith-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(2.8rem, 5vw, 4.5rem); line-height: 1.15; color: var(--cream); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 1s ease 0.6s forwards; }
+  .faith-subtitle { font-family: 'Lora', serif; font-style: italic; font-size: 1.1rem; line-height: 1.8; color: rgba(237,227,208,0.55); max-width: 46ch; margin: 0 auto; opacity: 0; animation: fadeUp 1s ease 0.8s forwards; }
+
+  /* AYAH HERO */
+  .ayah-hero { background: var(--moss); padding: 4rem 3rem; text-align: center; }
+  .ayah-arabic-big { font-family: 'Scheherazade New', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); color: var(--sky); line-height: 2; direction: rtl; margin-bottom: 1rem; }
+  .ayah-trans { font-family: 'Lora', serif; font-style: italic; font-size: 0.95rem; color: rgba(245,239,228,0.55); line-height: 1.6; }
+  .ayah-ref { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(168,191,176,0.4); margin-top: 0.5rem; }
+
+  /* FAITH NOTES */
+  .faith-notes { max-width: 820px; margin: 0 auto; padding: 6rem 3rem; }
+  .section-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 0.75rem; }
+  .section-label::before { content: ''; width: 28px; height: 1px; background: var(--sage); }
+
+  .faith-note { padding: 2.5rem 0; border-bottom: 1px solid rgba(212,184,150,0.3); }
+  .faith-note:first-of-type { border-top: 1px solid rgba(212,184,150,0.3); }
+  .note-num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; color: var(--sand); margin-bottom: 0.75rem; opacity: 0.6; }
+  .note-title { font-family: 'Lora', serif; font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.4; }
+  .note-body { font-family: 'Lora', serif; font-size: 1rem; line-height: 1.9; color: var(--dusk); }
+  .note-body + .note-body { margin-top: 1rem; }
+
+  /* AYAHS COLLECTION */
+  .ayahs-collection { background: var(--faith-dark); padding: 6rem 3rem; }
+  .ayahs-inner { max-width: 1100px; margin: 0 auto; }
+  .ayahs-header { text-align: center; margin-bottom: 4rem; }
+  .ayahs-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(168,191,176,0.5); margin-bottom: 1rem; }
+  .ayahs-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 2.2rem; color: var(--cream); }
+  .ayahs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .ayah-card { border: 1px solid rgba(212,184,150,0.1); padding: 2.5rem; text-align: center; transition: background 0.3s; }
+  .ayah-card:hover { background: rgba(212,184,150,0.03); }
+  .ayah-card-arabic { font-family: 'Scheherazade New', serif; font-size: 1.5rem; color: var(--sky); line-height: 2; direction: rtl; margin-bottom: 1rem; }
+  .ayah-card-trans { font-family: 'Lora', serif; font-style: italic; font-size: 0.88rem; color: rgba(237,227,208,0.5); line-height: 1.65; margin-bottom: 0.75rem; }
+  .ayah-card-ref { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(200,149,58,0.4); }
+
+  /* WHAT FAITH LOOKS LIKE */
+  .faith-looks { max-width: 1100px; margin: 0 auto; padding: 6rem 3rem; }
+  .looks-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--text-primary); margin-bottom: 3rem; }
+  .looks-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--sand); }
+  .looks-item { display: flex; align-items: baseline; gap: 2rem; padding: 1.75rem 0; border-bottom: 1px solid rgba(212,184,150,0.3); }
+  .looks-icon { font-family: 'Scheherazade New', serif; font-size: 1.3rem; color: var(--gold); min-width: 2rem; opacity: 0.6; }
+  .looks-text { font-family: 'Lora', serif; font-size: 1.05rem; line-height: 1.7; color: var(--text-primary); }
+  .looks-text em { font-style: italic; color: var(--dusk); font-size: 0.9rem; }
+
+  /* CLOSING */
+  .faith-closing { background: var(--moss); padding: 5rem 3rem; text-align: center; }
+  .faith-closing blockquote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1.3rem, 2.5vw, 2rem); color: var(--cream); max-width: 46ch; margin: 0 auto 1.5rem; line-height: 1.6; }
+  .faith-closing cite { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sky); font-style: normal; opacity: 0.6; }
+
+  footer { background: var(--footer-bg); color: rgba(245,239,228,0.4); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; transition: background 0.4s; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--cream); text-decoration: none; }
+  .footer-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,239,228,0.4); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--sand); }
+  .footer-note { font-family: 'Lora', serif; font-style: italic; font-size: 0.78rem; color: rgba(212,184,150,0.4); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .faith-hero { padding: 7rem 1.5rem 5rem; }
+    .faith-notes { padding: 4rem 1.5rem; }
+    .ayahs-collection { padding: 4rem 1.5rem; }
+    .ayahs-grid { grid-template-columns: 1fr; }
+    .faith-looks { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">The Wild Soul</a>
+  <ul class="nav-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="nature.html">Nature</a></li>
+    <li><a href="faith.html" class="active">Faith</a></li>
+    <li><a href="adventures.html">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"></button></li>
+  </ul>
+</nav>
+
+<section class="faith-hero">
+  <svg class="faith-hero-stars" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <circle cx="100" cy="80" r="1.5" fill="#C8953A" opacity="0.5"/><circle cx="220" cy="45" r="1" fill="#A8BFB0" opacity="0.4"/><circle cx="380" cy="90" r="2" fill="#C8953A" opacity="0.35"/><circle cx="520" cy="30" r="1" fill="#A8BFB0" opacity="0.5"/><circle cx="680" cy="70" r="1.5" fill="#C8953A" opacity="0.4"/><circle cx="820" cy="25" r="1" fill="#A8BFB0" opacity="0.45"/><circle cx="960" cy="85" r="2" fill="#C8953A" opacity="0.3"/><circle cx="1100" cy="50" r="1.5" fill="#A8BFB0" opacity="0.4"/><circle cx="160" cy="140" r="1" fill="#C8953A" opacity="0.3"/><circle cx="340" cy="160" r="1.5" fill="#A8BFB0" opacity="0.35"/><circle cx="580" cy="130" r="1" fill="#C8953A" opacity="0.4"/><circle cx="760" cy="155" r="2" fill="#A8BFB0" opacity="0.3"/><circle cx="1000" cy="140" r="1" fill="#C8953A" opacity="0.35"/><circle cx="60" cy="200" r="1.5" fill="#A8BFB0" opacity="0.25"/><circle cx="440" cy="210" r="1" fill="#C8953A" opacity="0.3"/><circle cx="900" cy="190" r="1.5" fill="#A8BFB0" opacity="0.28"/>
+  </svg>
+  <div class="faith-hero-content">
+    <div class="faith-bismillah">بسم الله الرحمن الرحيم</div>
+    <p class="faith-eyebrow">No preaching. No pressure. Just honest.</p>
+    <h1 class="faith-title">Quiet Faith</h1>
+    <p class="faith-subtitle">This is not a place of rules and lectures. It's a place where faith shows up the way it actually does — in the middle of a forest, in a funny moment, in silence before dawn.</p>
+  </div>
+</section>
+
+<div class="ayah-hero">
+  <div class="ayah-arabic-big">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div>
+  <div class="ayah-trans">"Verily, in the remembrance of God do hearts find rest."</div>
+  <div class="ayah-ref">Quran · Surah Ar-Ra'd · 13:28</div>
+</div>
+
+<section class="faith-notes">
+  <div class="section-label">Notes on faith from the wild</div>
+
+  <div class="faith-note reveal">
+    <div class="note-num">Note 01</div>
+    <h2 class="note-title">Faith is not something you perform. It's something you return to.</h2>
+    <p class="note-body">I spent years performing. Saying the right words, making the right movements, when people were watching. What I found outside — in the quiet places, away from any audience — was that real faith has nothing to do with anyone else seeing it. It's between you and the One who already knows everything anyway.</p>
+  </div>
+
+  <div class="faith-note reveal">
+    <div class="note-num">Note 02</div>
+    <h2 class="note-title">The Prophet ﷺ loved nature. I think about this a lot.</h2>
+    <p class="note-body">He noticed things. The smell of rain. The behavior of birds. He spoke about trees with tenderness. He made salah on the earth itself. There is a whole tradition of noticing the natural world as an act of worship — and somehow we forgot it, replaced it with fluorescent lighting and crowds. I'm trying to remember it.</p>
+  </div>
+
+  <div class="faith-note reveal">
+    <div class="note-num">Note 03</div>
+    <h2 class="note-title">Tawbah is not a door closing. It is a window opening.</h2>
+    <p class="note-body">I always imagined returning to God as something heavy and dramatic — a long list of sins, a judge, a sentence. What I found was almost embarrassingly simple. A stream. A verse I knew as a child. A cry I'd been holding for years. And then — slowly — something that felt like being known, forgiven, and welcomed back. The word tawbah means to turn. Not to earn, not to explain. Just to turn.</p>
+  </div>
+
+  <div class="faith-note reveal">
+    <div class="note-num">Note 04</div>
+    <h2 class="note-title">Laughter is sunnah. I have sources.</h2>
+    <p class="note-body">He ﷺ laughed until his back teeth showed. He played. He raced with Aisha. He was warm, funny, gentle, and full of life. Anyone who tells you a good Muslim must be grave and heavy all the time has simply not read the seerah carefully enough. Joy is not a distraction from faith. It is sometimes the evidence of it.</p>
+  </div>
+</section>
+
+<section class="ayahs-collection">
+  <div class="ayahs-inner">
+    <div class="ayahs-header reveal">
+      <p class="ayahs-label">Verses that found me at the right time</p>
+      <h2 class="ayahs-title">Words I carry</h2>
+    </div>
+    <div class="ayahs-grid">
+      <div class="ayah-card reveal">
+        <div class="ayah-card-arabic">لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ</div>
+        <div class="ayah-card-trans">"Do not despair of the mercy of God."</div>
+        <div class="ayah-card-ref">Quran 39:53</div>
+      </div>
+      <div class="ayah-card reveal">
+        <div class="ayah-card-arabic">وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا</div>
+        <div class="ayah-card-trans">"Whoever is mindful of God, He will make a way out for them."</div>
+        <div class="ayah-card-ref">Quran 65:2</div>
+      </div>
+      <div class="ayah-card reveal">
+        <div class="ayah-card-arabic">فَإِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
+        <div class="ayah-card-trans">"Verily, with hardship comes ease."</div>
+        <div class="ayah-card-ref">Quran 94:5</div>
+      </div>
+      <div class="ayah-card reveal">
+        <div class="ayah-card-arabic">وَفِي الْأَرْضِ آيَاتٌ لِّلْمُوقِنِينَ</div>
+        <div class="ayah-card-trans">"And in the earth are signs for those who are certain."</div>
+        <div class="ayah-card-ref">Quran 51:20</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faith-looks">
+  <h2 class="looks-title reveal">What faith actually looks like, for me</h2>
+  <div class="looks-list">
+    <div class="looks-item reveal"><div class="looks-icon">✦</div><div class="looks-text">Praying Fajr outside while the sky goes from black to blue to gold. <em>This is the best prayer of the day and I will die on this hill.</em></div></div>
+    <div class="looks-item reveal"><div class="looks-icon">✦</div><div class="looks-text">Saying alhamdulillah and actually meaning it, not just as a reflex. <em>Sometimes it takes standing next to something beautiful to mean it properly.</em></div></div>
+    <div class="looks-item reveal"><div class="looks-icon">✦</div><div class="looks-text">Laughing at something absurd and feeling grateful that God made humor. <em>The goat incident comes to mind.</em></div></div>
+    <div class="looks-item reveal"><div class="looks-icon">✦</div><div class="looks-text">Sitting in silence long enough to hear whatever was underneath all the noise. <em>It's almost always something gentle.</em></div></div>
+    <div class="looks-item reveal"><div class="looks-icon">✦</div><div class="looks-text">Returning after being away — not perfectly, not all at once — just turning back. <em>Tawbah is a practice, not a single event.</em></div></div>
+    <div class="looks-item reveal"><div class="looks-icon">✦</div><div class="looks-text">Noticing. A bird, a cloud, a river, a color in the sky. Everything is a sign for those paying attention. <em>وَفِي الْأَرْضِ آيَاتٌ</em></div></div>
+  </div>
+</section>
+
+<div class="faith-closing">
+  <blockquote>"I am not a scholar. I'm just a person who went outside and found that God was already there."</blockquote>
+  <cite>— The Wild Soul</cite>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">The Wild Soul</a>
+  <ul class="footer-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="adventures.html">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="index-ar.html">العربية</a></li>
+  </ul>
+  <p class="footer-note">بسم الله الرحمن الرحيم</p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+  toggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

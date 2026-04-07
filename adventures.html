@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adventures — The Wild Soul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Karla:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bark: #5C3D1E; --sage: #7A8C6E; --sand: #D4B896; --gold: #C8953A; --dusk: #8B7355;
+    --bg: #F5EFE4; --bg-card: #EDE3D0; --bg-nav: rgba(245,239,228,0.9);
+    --text-primary: #2C1A0E; --border: rgba(92,61,30,0.1);
+    --moss: #4A5240; --footer-bg: #2C1A0E; --sky: #A8BFB0; --cream: #F5EFE4;
+  }
+  [data-theme="dark"] {
+    --bg: #1A1109; --bg-card: #2A1C0E; --bg-nav: rgba(20,13,5,0.92);
+    --text-primary: #EDE3D0; --border: rgba(212,184,150,0.12);
+    --bark: #D4A574; --dusk: #A8916F; --sand: #8B6840;
+    --footer-bg: #110B04; --cream: #EDE3D0; --moss: #2E3B2A;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text-primary); font-family: 'Karla', sans-serif; font-weight: 300; overflow-x: hidden; transition: background 0.4s, color 0.4s; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 100; opacity: 0.35; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 1.25rem 3rem; display: flex; align-items: center; justify-content: space-between; background: var(--bg-nav); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); transition: background 0.4s; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; color: var(--bark); text-decoration: none; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dusk); text-decoration: none; transition: color 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--bark); }
+  .nav-links a.active { border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+  .theme-toggle { width: 44px; height: 24px; background: var(--border); border: 1px solid var(--border); border-radius: 999px; cursor: pointer; position: relative; transition: background 0.3s; padding: 0; outline: none; }
+  .theme-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--bark); transition: transform 0.3s ease; }
+  [data-theme="dark"] .theme-toggle::after { transform: translateX(20px); background: var(--gold); }
+
+  /* HEADER */
+  .page-header { padding: 9rem 3rem 5rem; background: var(--moss); position: relative; overflow: hidden; }
+  .page-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: var(--gold); }
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+  .page-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(168,191,176,0.7); margin-bottom: 1.25rem; opacity: 0; animation: fadeUp 1s ease 0.2s forwards; }
+  .page-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 5vw, 5rem); line-height: 1.05; color: var(--cream); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
+  .page-title em { font-style: italic; color: var(--gold); }
+  .page-desc { font-family: 'Lora', serif; font-style: italic; font-size: 1.05rem; line-height: 1.8; color: rgba(237,227,208,0.6); max-width: 52ch; opacity: 0; animation: fadeUp 1s ease 0.6s forwards; }
+
+  /* STATS BAR */
+  .stats-bar { background: var(--footer-bg); padding: 1.5rem 3rem; transition: background 0.4s; }
+  .stats-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 4rem; }
+  .stat { }
+  .stat-num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.8rem; color: var(--gold); }
+  .stat-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(245,239,228,0.35); margin-top: 0.2rem; }
+
+  /* ADVENTURES GRID */
+  .adventures-section { max-width: 1200px; margin: 0 auto; padding: 5rem 3rem 7rem; }
+
+  .adv-featured { display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; margin-bottom: 3rem; border: 1px solid var(--border); overflow: hidden; opacity: 0; animation: fadeUp 1s ease 0.5s forwards; }
+  .adv-featured-visual { background: var(--moss); min-height: 380px; position: relative; }
+  .adv-featured-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .adv-featured-body { background: var(--bg-card); padding: 3rem; display: flex; flex-direction: column; justify-content: center; transition: background 0.4s; }
+  .adv-num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 3rem; color: rgba(200,149,58,0.2); margin-bottom: 1rem; }
+  .adv-tag { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .adv-tag::before { content: ''; width: 16px; height: 1px; background: var(--sage); }
+  .adv-title { font-family: 'Lora', serif; font-size: 1.5rem; line-height: 1.35; color: var(--text-primary); margin-bottom: 1rem; }
+  .adv-desc { font-size: 0.9rem; line-height: 1.75; color: var(--dusk); margin-bottom: 1.5rem; }
+  .adv-lesson { font-family: 'Lora', serif; font-style: italic; font-size: 0.95rem; color: var(--bark); border-left: 2px solid var(--gold); padding-left: 1rem; margin-bottom: 1.5rem; }
+  .adv-meta { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); }
+
+  /* ADVENTURES LIST */
+  .adv-list { display: flex; flex-direction: column; }
+  .adv-row { display: grid; grid-template-columns: 70px 1fr 120px; gap: 2rem; align-items: start; padding: 2.25rem 0; border-bottom: 1px solid rgba(212,184,150,0.3); cursor: pointer; transition: padding-left 0.3s; text-decoration: none; color: inherit; }
+  .adv-row:hover { padding-left: 1rem; }
+  .adv-row-num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.4rem; color: var(--sand); padding-top: 0.15rem; }
+  .adv-row-tag { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage); margin-bottom: 0.5rem; }
+  .adv-row-title { font-family: 'Lora', serif; font-size: 1.1rem; line-height: 1.4; color: var(--text-primary); margin-bottom: 0.4rem; }
+  .adv-row-desc { font-size: 0.83rem; line-height: 1.6; color: var(--dusk); }
+  .adv-row-right { text-align: right; padding-top: 0.15rem; }
+  .adv-row-badge { display: inline-block; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.35rem 0.8rem; border: 1px solid var(--sand); color: var(--dusk); margin-bottom: 0.5rem; }
+  .adv-row-arrow { font-size: 0.9rem; color: var(--sand); display: block; margin-top: 0.5rem; transition: transform 0.3s, color 0.3s; }
+  .adv-row:hover .adv-row-arrow { transform: translateX(4px); color: var(--bark); }
+
+  /* QUOTE */
+  .adv-quote { background: var(--footer-bg); padding: 4.5rem 3rem; text-align: center; }
+  .adv-quote blockquote { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(1.3rem, 2.5vw, 1.9rem); color: var(--cream); max-width: 48ch; margin: 0 auto 1rem; line-height: 1.5; }
+  .adv-quote cite { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(212,184,150,0.45); font-style: normal; }
+
+  footer { background: var(--footer-bg); color: rgba(245,239,228,0.4); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; transition: background 0.4s; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--cream); text-decoration: none; }
+  .footer-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,239,228,0.4); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--sand); }
+  .footer-note { font-family: 'Lora', serif; font-style: italic; font-size: 0.78rem; color: rgba(212,184,150,0.4); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .page-header { padding: 7rem 1.5rem 4rem; }
+    .stats-bar { padding: 1.5rem; }
+    .stats-inner { gap: 2rem; flex-wrap: wrap; }
+    .adventures-section { padding: 3rem 1.5rem 5rem; }
+    .adv-featured { grid-template-columns: 1fr; }
+    .adv-featured-visual { min-height: 220px; }
+    .adv-featured-body { padding: 2rem; }
+    .adv-row { grid-template-columns: 50px 1fr; }
+    .adv-row-right { display: none; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">The Wild Soul</a>
+  <ul class="nav-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="nature.html">Nature</a></li>
+    <li><a href="faith.html">Faith</a></li>
+    <li><a href="adventures.html" class="active">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"></button></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <div class="header-inner">
+    <p class="page-eyebrow">Field notes from the wild</p>
+    <h1 class="page-title">Adventures &<br><em>Field Notes</em></h1>
+    <p class="page-desc">Not travel diaries. Not guides. Just honest records of what happened when I went somewhere with no fixed plan and an open heart.</p>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-num">23</div><div class="stat-label">Adventures recorded</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Plans that went exactly right</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Lessons learned anyway</div></div>
+  </div>
+</div>
+
+<section class="adventures-section">
+  <!-- FEATURED -->
+  <div class="adv-featured">
+    <div class="adv-featured-visual">
+      <svg class="adv-featured-svg" viewBox="0 0 580 380" xmlns="http://www.w3.org/2000/svg">
+        <rect width="580" height="380" fill="#4A5240"/>
+        <rect width="580" height="380" fill="url(#nightGrad)" opacity="0.6"/>
+        <defs>
+          <linearGradient id="nightGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1A1109" stop-opacity="0.8"/>
+            <stop offset="60%" stop-color="#2C1A0E" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#4A5240" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="290" cy="400" rx="380" ry="80" fill="#3A4232"/>
+        <rect x="60" y="100" width="10" height="200" rx="3" fill="#2C1A0E" opacity="0.7"/>
+        <ellipse cx="45" cy="85" rx="42" ry="36" fill="#3A4232" opacity="0.8"/>
+        <ellipse cx="72" cy="76" rx="38" ry="32" fill="#5C6B50" opacity="0.7"/>
+        <rect x="460" y="130" width="8" height="160" rx="3" fill="#2C1A0E" opacity="0.6"/>
+        <ellipse cx="448" cy="118" rx="36" ry="30" fill="#3A4232" opacity="0.7"/>
+        <ellipse cx="470" cy="110" rx="32" ry="27" fill="#5C6B50" opacity="0.6"/>
+        <circle cx="120" cy="40" r="1.5" fill="#C8953A" opacity="0.7"/>
+        <circle cx="200" cy="25" r="1" fill="#C8953A" opacity="0.6"/>
+        <circle cx="310" cy="35" r="2" fill="#C8953A" opacity="0.8"/>
+        <circle cx="390" cy="20" r="1.5" fill="#C8953A" opacity="0.65"/>
+        <circle cx="460" cy="45" r="1" fill="#C8953A" opacity="0.55"/>
+        <circle cx="520" cy="30" r="1.5" fill="#C8953A" opacity="0.5"/>
+        <circle cx="75" cy="55" r="1" fill="#C8953A" opacity="0.5"/>
+        <circle cx="165" cy="60" r="1.5" fill="#C8953A" opacity="0.45"/>
+        <circle cx="430" cy="65" r="1" fill="#C8953A" opacity="0.5"/>
+        <circle cx="290" cy="180" r="10" fill="#2C1A0E" opacity="0.85"/>
+        <path d="M280 190 Q290 215 300 190" stroke="#2C1A0E" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+        <path d="M281 192 Q272 218 262 215" stroke="#2C1A0E" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M299 192 Q308 218 318 215" stroke="#2C1A0E" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M280 198 Q272 204 262 200" stroke="#2C1A0E" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.65"/>
+        <path d="M300 198 Q308 204 318 200" stroke="#2C1A0E" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.65"/>
+      </svg>
+    </div>
+    <div class="adv-featured-body">
+      <div class="adv-num">01</div>
+      <div class="adv-tag">Night · Stars · No plan</div>
+      <h2 class="adv-title">Sleeping under stars with zero plan, zero tent, and zero regret</h2>
+      <p class="adv-desc">A night that cost nothing and gave me something I still cannot name properly. I lay on my back for three hours watching the Milky Way and thinking: this is free. All of this is completely free.</p>
+      <p class="adv-lesson">"The sky was so full of stars it felt unfair. Like God was showing off."</p>
+      <div class="adv-meta">November 2024 · Mountains</div>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div class="adv-list">
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">02</div>
+      <div>
+        <div class="adv-row-tag">Dawn · Mountains · Tea</div>
+        <div class="adv-row-title">Making tea on a mountain at dawn while mist covered everything</div>
+        <div class="adv-row-desc">Some moments you do not photograph. You understand in real time that capturing them would break them. So you just sit there, holding a warm cup, watching the world wake up.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">Mountains</span><span class="adv-row-arrow">→</span></div>
+    </a>
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">03</div>
+      <div>
+        <div class="adv-row-tag">Water · Alone · Honest</div>
+        <div class="adv-row-title">Swimming in a river alone and feeling completely okay about being alive</div>
+        <div class="adv-row-desc">Cold water is the most honest conversation you can have with yourself. It removes every pretense. You can't be performing when you're gasping and laughing at the same time.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">River</span><span class="adv-row-arrow">→</span></div>
+    </a>
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">04</div>
+      <div>
+        <div class="adv-row-tag">People · Wisdom · Simple</div>
+        <div class="adv-row-title">Talking to a farmer for three hours about rain, patience, and what it means to wait</div>
+        <div class="adv-row-desc">He had never read a self-help book. He had just paid attention to his land for fifty years. Every sentence he said was worth more than a chapter of anything I'd read.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">People</span><span class="adv-row-arrow">→</span></div>
+    </a>
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">05</div>
+      <div>
+        <div class="adv-row-tag">Faith · Funny · Rain</div>
+        <div class="adv-row-title">Getting rained on mid-prayer and laughing through the whole thing</div>
+        <div class="adv-row-desc">I was on my second raka'a when it started. Lightly at first. Then not lightly at all. I finished soaking wet, couldn't stop laughing. Allah has a sense of humor. I am completely convinced.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">Faith</span><span class="adv-row-arrow">→</span></div>
+    </a>
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">06</div>
+      <div>
+        <div class="adv-row-tag">Lost · Adventure · Best day</div>
+        <div class="adv-row-title">I got completely, helplessly lost. It was the best day of my year.</div>
+        <div class="adv-row-desc">GPS off. Map wrong. Three hours walking in the wrong direction. Found a hidden valley nobody had told me about. Sometimes the trail you weren't supposed to take leads somewhere the correct one never could.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">Adventure</span><span class="adv-row-arrow">→</span></div>
+    </a>
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">07</div>
+      <div>
+        <div class="adv-row-tag">Funny · Animals · Lesson</div>
+        <div class="adv-row-title">The goat that ate my notebook, prayer rug, and remaining dignity</div>
+        <div class="adv-row-desc">I turned around for two minutes. That was all it took. She looked me dead in the eye while chewing my notes. I learned about attachment that day. Also about goats.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">Funny</span><span class="adv-row-arrow">→</span></div>
+    </a>
+    <a href="#" class="adv-row reveal">
+      <div class="adv-row-num">08</div>
+      <div>
+        <div class="adv-row-tag">Desert · Silence · Night</div>
+        <div class="adv-row-title">One night in the desert where I heard nothing for four hours and it was the loudest experience of my life</div>
+        <div class="adv-row-desc">Real silence — the kind where your own breathing sounds loud — does something to you. It turns the volume up on everything inside that you've been ignoring.</div>
+      </div>
+      <div class="adv-row-right"><span class="adv-row-badge">Desert</span><span class="adv-row-arrow">→</span></div>
+    </a>
+  </div>
+</section>
+
+<div class="adv-quote">
+  <blockquote>"I have never come back from anywhere exactly the same as I left. That's the whole point."</blockquote>
+  <cite>— Field notes, somewhere, sometime</cite>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">The Wild Soul</a>
+  <ul class="footer-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="faith.html">Faith</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="index-ar.html">العربية</a></li>
+  </ul>
+  <p class="footer-note">Written with gratitude · بسم الله</p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+  toggle.addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wild Soul</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Karla:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── LIGHT THEME ── */
+  :root {
+    --soil: #2C1A0E;
+    --bark: #5C3D1E;
+    --moss: #4A5240;
+    --sage: #7A8C6E;
+    --sand: #D4B896;
+    --cream: #F5EFE4;
+    --parchment: #EDE3D0;
+    --sky: #A8BFB0;
+    --gold: #C8953A;
+    --dusk: #8B7355;
+
+    --bg: #F5EFE4;
+    --bg-card: #EDE3D0;
+    --bg-nav: rgba(245,239,228,0.88);
+    --text-primary: #2C1A0E;
+    --text-secondary: #8B7355;
+    --text-muted: #7A8C6E;
+    --border: rgba(92,61,30,0.1);
+    --border-card: rgba(92,61,30,0.08);
+    --strip-bg: #5C3D1E;
+    --strip-text: #F5EFE4;
+    --pillars-bg: #2C1A0E;
+    --quote-bg: #4A5240;
+    --footer-bg: #2C1A0E;
+    --hero-right-bg: #EDE3D0;
+  }
+
+  /* ── DARK THEME ── */
+  [data-theme="dark"] {
+    --bg: #1A1109;
+    --bg-card: #2A1C0E;
+    --bg-nav: rgba(20,13,5,0.92);
+    --text-primary: #EDE3D0;
+    --text-secondary: #A8916F;
+    --text-muted: #7A8C6E;
+    --border: rgba(212,184,150,0.12);
+    --border-card: rgba(212,184,150,0.08);
+    --strip-bg: #3A2510;
+    --strip-text: #EDE3D0;
+    --pillars-bg: #110B04;
+    --quote-bg: #2E3B2A;
+    --footer-bg: #110B04;
+    --hero-right-bg: #221508;
+    --soil: #EDE3D0;
+    --bark: #D4A574;
+    --sage: #7A8C6E;
+    --dusk: #A8916F;
+    --cream: #EDE3D0;
+    --parchment: #2A1C0E;
+    --sand: #8B6840;
+    --gold: #C8953A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Karla', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 100; opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    padding: 1.25rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg-nav);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.4s;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 1.3rem;
+    color: var(--bark); letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+
+  .nav-links a {
+    font-size: 0.8rem; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--dusk); text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--bark); }
+
+  /* ── DARK MODE TOGGLE ── */
+  .theme-toggle {
+    width: 44px; height: 24px;
+    background: var(--border-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s;
+    flex-shrink: 0;
+    padding: 0;
+    outline: none;
+  }
+
+  .theme-toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--bark);
+    transition: transform 0.3s ease, background 0.3s;
+  }
+
+  [data-theme="dark"] .theme-toggle::after {
+    transform: translateX(20px);
+    background: var(--gold);
+  }
+
+  .theme-toggle-wrap {
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .theme-icon {
+    font-size: 0.75rem;
+    color: var(--dusk);
+    transition: opacity 0.3s;
+    user-select: none;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 4rem 4rem 3rem;
+    position: relative; z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 1s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: 1.05; color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 1s ease 0.4s forwards;
+  }
+
+  .hero-title em { font-style: italic; color: var(--bark); }
+
+  .hero-subtitle {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 1.1rem; line-height: 1.8;
+    color: var(--dusk); max-width: 38ch; margin-bottom: 3rem;
+    opacity: 0; animation: fadeUp 1s ease 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--cream); background: var(--bark);
+    padding: 0.9rem 2rem; text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+    opacity: 0; animation: fadeUp 1s ease 0.8s forwards;
+  }
+
+  .hero-cta:hover { background: var(--soil); transform: translateY(-1px); }
+  .hero-cta-arrow { transition: transform 0.3s; }
+  .hero-cta:hover .hero-cta-arrow { transform: translateX(4px); }
+
+  .hero-right { position: relative; overflow: hidden; }
+
+  .hero-illustration {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 60% 40%, rgba(74,82,64,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 30% 70%, rgba(200,149,58,0.1) 0%, transparent 50%),
+      var(--hero-right-bg);
+    transition: background 0.4s;
+  }
+
+  .hero-svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0; animation: fadeIn 1.5s ease 0.5s forwards;
+  }
+
+  .hero-tag {
+    position: absolute; bottom: 3rem; left: -1.5rem;
+    background: var(--gold); color: var(--cream);
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.6rem 1.5rem; font-weight: 500;
+    opacity: 0; animation: fadeUp 1s ease 1s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 3rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0; animation: fadeIn 1s ease 1.5s forwards;
+  }
+
+  .scroll-line {
+    width: 40px; height: 1px; background: var(--sage);
+    position: relative; overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%; background: var(--bark);
+    animation: scanline 2s ease-in-out infinite;
+  }
+
+  @keyframes scanline { to { left: 100%; } }
+
+  /* ── INTRO STRIP ── */
+  .intro-strip {
+    background: var(--strip-bg); color: var(--strip-text);
+    padding: 1.25rem 3rem; overflow: hidden;
+    transition: background 0.4s;
+  }
+
+  .intro-strip-text {
+    font-family: 'Lora', serif; font-style: italic; font-size: 1rem;
+    white-space: nowrap;
+    animation: marquee 30s linear infinite;
+    display: flex; gap: 4rem;
+  }
+
+  .intro-strip-text span { color: var(--sand); }
+
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── MANIFESTO ── */
+  .manifesto {
+    padding: 7rem 3rem;
+    display: grid; grid-template-columns: 1fr 2fr;
+    gap: 4rem; align-items: start;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .manifesto-label {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sage); padding-top: 0.4rem;
+    position: sticky; top: 5rem;
+  }
+
+  .manifesto-body {
+    font-family: 'Lora', serif;
+    font-size: 1.35rem; line-height: 1.85;
+    color: var(--text-primary);
+  }
+
+  .manifesto-body p { margin-bottom: 1.5rem; }
+  .manifesto-body strong { font-weight: 600; color: var(--bark); }
+
+  .manifesto-body .big-quote {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.8rem; line-height: 1.4; color: var(--bark);
+    border-left: 3px solid var(--gold); padding-left: 1.5rem;
+    margin: 2.5rem 0;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex; align-items: center; gap: 1.5rem;
+    padding: 0 3rem; max-width: 1200px; margin: 0 auto;
+  }
+
+  .divider-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, transparent, var(--sand), transparent);
+  }
+
+  .divider-icon { color: var(--gold); font-size: 1rem; }
+
+  /* ── ESSAYS ── */
+  .essays {
+    padding: 5rem 3rem 7rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex; align-items: baseline;
+    justify-content: space-between; margin-bottom: 3rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; color: var(--text-primary);
+  }
+
+  .section-link {
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--sage); text-decoration: none;
+    border-bottom: 1px solid var(--sand); padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+
+  .section-link:hover { color: var(--bark); border-color: var(--bark); }
+
+  .essays-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem;
+  }
+
+  .essay-card {
+    background: var(--bg-card);
+    padding: 2rem; position: relative; overflow: hidden;
+    cursor: pointer; transition: transform 0.3s ease;
+    border: 1px solid var(--border-card);
+    text-decoration: none; color: inherit;
+    display: block;
+  }
+
+  .essay-card:hover { transform: translateY(-4px); }
+
+  .essay-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .essay-card:hover::after { transform: scaleX(1); }
+  .essay-card.featured { grid-row: span 2; padding: 2.5rem; }
+
+  .essay-tag {
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .essay-tag::before { content: ''; width: 20px; height: 1px; background: var(--sage); }
+
+  .essay-title {
+    font-family: 'Lora', serif;
+    font-size: 1.4rem; line-height: 1.35;
+    color: var(--text-primary); margin-bottom: 1rem;
+  }
+
+  .essay-card.featured .essay-title { font-size: 1.9rem; margin-bottom: 1.25rem; }
+
+  .essay-excerpt {
+    font-size: 0.9rem; line-height: 1.7;
+    color: var(--dusk); margin-bottom: 1.5rem;
+  }
+
+  .essay-meta {
+    font-size: 0.7rem; letter-spacing: 0.08em;
+    color: var(--sage); text-transform: uppercase;
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  /* ── PILLARS ── */
+  .pillars {
+    background: var(--pillars-bg);
+    padding: 6rem 3rem; color: var(--cream);
+    transition: background 0.4s;
+  }
+
+  .pillars-inner { max-width: 1200px; margin: 0 auto; }
+
+  .pillars-header { text-align: center; margin-bottom: 4rem; }
+
+  .pillars-eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sand); margin-bottom: 1rem;
+  }
+
+  .pillars-title {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 2.5rem; color: var(--cream); line-height: 1.2;
+  }
+
+  .pillars-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; border: 1px solid rgba(212,184,150,0.15);
+  }
+
+  .pillar {
+    padding: 2.5rem 2rem;
+    border-right: 1px solid rgba(212,184,150,0.15);
+    transition: background 0.3s;
+  }
+
+  .pillar:last-child { border-right: none; }
+  .pillar:hover { background: rgba(212,184,150,0.05); }
+
+  .pillar-number {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 3.5rem; color: rgba(200,149,58,0.25);
+    line-height: 1; margin-bottom: 1.25rem;
+  }
+
+  .pillar-title {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem; color: var(--sand); margin-bottom: 0.75rem;
+  }
+
+  .pillar-text {
+    font-size: 0.85rem; line-height: 1.7;
+    color: rgba(245,239,228,0.55);
+  }
+
+  /* ── QUOTE BAND ── */
+  .quote-band {
+    background: var(--quote-bg);
+    padding: 5rem 3rem; text-align: center;
+    transition: background 0.4s;
+  }
+
+  .quote-band blockquote {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    line-height: 1.5; color: var(--cream);
+    max-width: 50ch; margin: 0 auto 1.5rem;
+  }
+
+  .quote-band cite {
+    font-size: 0.75rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--sky); font-style: normal;
+  }
+
+  /* ── ADVENTURES ── */
+  .adventures {
+    padding: 6rem 3rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .adventures-list {
+    display: flex; flex-direction: column; gap: 0;
+    border-top: 1px solid var(--sand);
+  }
+
+  .adventure-item {
+    display: grid; grid-template-columns: 80px 1fr auto;
+    gap: 2rem; align-items: center;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid rgba(212,184,150,0.4);
+    cursor: pointer; transition: padding-left 0.3s ease;
+    text-decoration: none; color: inherit;
+  }
+
+  .adventure-item:hover { padding-left: 1rem; }
+
+  .adventure-num {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.5rem; color: var(--sand);
+  }
+
+  .adventure-title {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.3rem;
+  }
+
+  .adventure-desc { font-size: 0.82rem; color: var(--dusk); }
+
+  .adventure-tag {
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--sand); color: var(--dusk);
+  }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    background: var(--bg-card);
+    padding: 6rem 3rem; text-align: center;
+    border-top: 1px solid var(--border);
+    transition: background 0.4s;
+  }
+
+  .newsletter-label {
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 1.25rem;
+  }
+
+  .newsletter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; color: var(--text-primary);
+    margin-bottom: 0.75rem; line-height: 1.2;
+  }
+
+  .newsletter-title em { font-style: italic; color: var(--bark); }
+
+  .newsletter-sub {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 1rem; color: var(--dusk); margin-bottom: 2.5rem;
+  }
+
+  .newsletter-form {
+    display: flex; gap: 0;
+    max-width: 420px; margin: 0 auto;
+  }
+
+  .newsletter-input {
+    flex: 1; padding: 0.85rem 1.25rem;
+    background: var(--bg); border: 1px solid var(--border);
+    border-right: none;
+    font-family: 'Karla', sans-serif; font-size: 0.9rem;
+    color: var(--text-primary); outline: none;
+    transition: background 0.4s, color 0.4s;
+  }
+
+  .newsletter-input::placeholder { color: var(--dusk); opacity: 0.6; }
+  .newsletter-input:focus { border-color: var(--bark); }
+
+  .newsletter-btn {
+    padding: 0.85rem 1.75rem; background: var(--bark);
+    color: var(--cream); border: none;
+    font-family: 'Karla', sans-serif; font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 500; cursor: pointer; transition: background 0.3s;
+  }
+
+  .newsletter-btn:hover { background: var(--soil); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--footer-bg); color: rgba(245,239,228,0.4);
+    padding: 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+    transition: background 0.4s;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.25rem; color: var(--cream);
+    text-decoration: none;
+  }
+
+  .footer-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+
+  .footer-links a {
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(245,239,228,0.45); text-decoration: none; transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--sand); }
+
+  .footer-bismillah {
+    font-family: 'Lora', serif; font-style: italic;
+    font-size: 0.8rem; color: rgba(212,184,150,0.5);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { height: 320px; }
+    .hero-tag { left: 0; }
+    .manifesto { grid-template-columns: 1fr; gap: 1.5rem; padding: 4rem 1.5rem; }
+    .manifesto-label { position: static; }
+    .essays { padding: 4rem 1.5rem; }
+    .essays-grid { grid-template-columns: 1fr; }
+    .essay-card.featured { grid-row: auto; }
+    .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+    .pillar { border-bottom: 1px solid rgba(212,184,150,0.15); }
+    .adventures { padding: 4rem 1.5rem; }
+    .adventure-item { grid-template-columns: 50px 1fr; }
+    .adventure-tag { display: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">The Wild Soul</a>
+  <ul class="nav-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="nature.html">Nature</a></li>
+    <li><a href="faith.html">Faith</a></li>
+    <li><a href="adventures.html">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+    <li>
+      <div class="theme-toggle-wrap">
+        <span class="theme-icon" id="theme-icon">☀️</span>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"></button>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">A free spirit · A nature lover · A Muslim heart</p>
+    <h1 class="hero-title">Leave the<br>world.<br><em>Find yourself.</em></h1>
+    <p class="hero-subtitle">Stories from someone who left the noise, walked into the wild, and found that life — with all its funny, messy, quiet beauty — is enough.</p>
+    <a href="letters.html" class="hero-cta">Read the letters <span class="hero-cta-arrow">→</span></a>
+
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll to explore
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-illustration"></div>
+    <svg class="hero-svg" viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#A8BFB0" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#EDE3D0" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7A8C6E" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#4A5240" stop-opacity="0.6"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="700" fill="url(#skyGrad)"/>
+      <ellipse cx="300" cy="680" rx="400" ry="80" fill="url(#groundGrad)"/>
+      <rect x="110" y="180" width="14" height="340" rx="4" fill="#5C3D1E" opacity="0.7"/>
+      <line x1="117" y1="280" x2="60" y2="220" stroke="#5C3D1E" stroke-width="6" stroke-linecap="round" opacity="0.6"/>
+      <line x1="117" y1="320" x2="180" y2="260" stroke="#5C3D1E" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+      <line x1="117" y1="360" x2="50" y2="310" stroke="#5C3D1E" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+      <ellipse cx="80" cy="200" rx="55" ry="45" fill="#4A5240" opacity="0.5"/>
+      <ellipse cx="50" cy="215" rx="40" ry="35" fill="#7A8C6E" opacity="0.4"/>
+      <ellipse cx="100" cy="190" rx="50" ry="40" fill="#4A5240" opacity="0.45"/>
+      <ellipse cx="170" cy="245" rx="42" ry="36" fill="#7A8C6E" opacity="0.4"/>
+      <ellipse cx="55" cy="295" rx="38" ry="30" fill="#4A5240" opacity="0.35"/>
+      <rect x="430" y="250" width="11" height="260" rx="3" fill="#5C3D1E" opacity="0.65"/>
+      <line x1="435" y1="340" x2="390" y2="290" stroke="#5C3D1E" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+      <line x1="435" y1="375" x2="485" y2="320" stroke="#5C3D1E" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+      <ellipse cx="390" cy="270" rx="48" ry="42" fill="#4A5240" opacity="0.45"/>
+      <ellipse cx="420" cy="255" rx="44" ry="38" fill="#7A8C6E" opacity="0.4"/>
+      <ellipse cx="480" cy="300" rx="40" ry="35" fill="#4A5240" opacity="0.4"/>
+      <ellipse cx="200" cy="590" rx="60" ry="30" fill="#4A5240" opacity="0.4"/>
+      <ellipse cx="370" cy="605" rx="50" ry="25" fill="#7A8C6E" opacity="0.35"/>
+      <ellipse cx="480" cy="598" rx="45" ry="22" fill="#4A5240" opacity="0.3"/>
+      <circle cx="300" cy="530" r="16" fill="#2C1A0E" opacity="0.75"/>
+      <path d="M284 545 Q300 575 320 545" stroke="#2C1A0E" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
+      <path d="M285 548 Q270 580 255 578" stroke="#2C1A0E" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.65"/>
+      <path d="M315 548 Q330 580 345 578" stroke="#2C1A0E" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.65"/>
+      <path d="M286 552 Q275 560 260 555" stroke="#2C1A0E" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <path d="M314 552 Q325 560 340 555" stroke="#2C1A0E" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <circle cx="300" cy="120" r="38" fill="none" stroke="#C8953A" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="300" cy="120" r="28" fill="#C8953A" opacity="0.15"/>
+      <circle cx="300" cy="120" r="14" fill="#C8953A" opacity="0.3"/>
+      <circle cx="180" cy="80" r="2" fill="#C8953A" opacity="0.5"/>
+      <circle cx="420" cy="60" r="1.5" fill="#C8953A" opacity="0.4"/>
+      <circle cx="360" cy="95" r="1" fill="#C8953A" opacity="0.6"/>
+      <circle cx="150" cy="130" r="1.5" fill="#C8953A" opacity="0.35"/>
+      <circle cx="460" cy="140" r="1" fill="#C8953A" opacity="0.45"/>
+      <circle cx="500" cy="85" r="2" fill="#C8953A" opacity="0.3"/>
+      <circle cx="80" cy="100" r="1.5" fill="#C8953A" opacity="0.4"/>
+      <path d="M220 170 Q227 163 234 170" stroke="#5C3D1E" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M245 155 Q250 149 256 155" stroke="#5C3D1E" stroke-width="1.5" fill="none" opacity="0.35"/>
+      <path d="M355 145 Q361 139 367 145" stroke="#5C3D1E" stroke-width="1.5" fill="none" opacity="0.35"/>
+      <path d="M140 620 Q145 590 148 615" stroke="#4A5240" stroke-width="2" fill="none" opacity="0.5"/>
+      <path d="M160 618 Q168 585 170 614" stroke="#7A8C6E" stroke-width="1.5" fill="none" opacity="0.4"/>
+      <path d="M400 612 Q406 582 410 610" stroke="#4A5240" stroke-width="2" fill="none" opacity="0.5"/>
+      <path d="M420 615 Q425 588 428 613" stroke="#7A8C6E" stroke-width="1.5" fill="none" opacity="0.4"/>
+    </svg>
+    <div class="hero-tag">Est. From the wild</div>
+  </div>
+</section>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <div class="intro-strip-text">
+    <span>Nature · </span> Faith · <span>Laughter · </span> Simplicity · <span>Wisdom · </span> Adventure · <span>Peace · </span> Honesty ·
+    <span>Nature · </span> Faith · <span>Laughter · </span> Simplicity · <span>Wisdom · </span> Adventure · <span>Peace · </span> Honesty ·
+    <span>Nature · </span> Faith · <span>Laughter · </span> Simplicity · <span>Wisdom · </span> Adventure · <span>Peace · </span> Honesty ·
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="manifesto-label">Who I am</div>
+  <div class="manifesto-body reveal">
+    <p>I left. Not dramatically — no goodbye letter, no big announcement. I just walked out into something <strong>slower, wilder, and more honest</strong> than anything the modern world was offering me.</p>
+    <div class="big-quote">"The forest doesn't ask you to prove yourself. Neither does the river. They just let you be."</div>
+    <p>I'm a Muslim, but not the kind who carries religion like a burden. I carry it like <strong>a quiet light</strong> — it's there when I sit still enough to notice it, in the sound of water, in a sky full of stars, in the small ridiculous things that make life funny and good.</p>
+    <p>This website is where I write those things down. The adventures. The embarrassing moments. The ideas that came to me sitting under a tree. The simple things that somehow changed everything.</p>
+  </div>
+</section>
+
+<div class="divider reveal"><div class="divider-line"></div><div class="divider-icon">✦</div><div class="divider-line"></div></div>
+
+<!-- ESSAYS -->
+<section class="essays" id="essays">
+  <div class="section-header reveal">
+    <h2 class="section-title">Letters from the wild</h2>
+    <a href="letters.html" class="section-link">All letters →</a>
+  </div>
+
+  <div class="essays-grid">
+    <a href="essay-lost-found.html" class="essay-card featured reveal">
+      <div class="essay-tag">Featured · Faith</div>
+      <h3 class="essay-title">I Was Lost for Years. The Forest Brought Me Back.</h3>
+      <p class="essay-excerpt">I was not a bad person who did bad things. I was a good person who forgot who he was. This is how nature, silence, and God found me again — and what happened when they did.</p>
+      <div class="essay-meta">
+        <span>12 min read</span>
+        <span>·</span>
+        <span>A true story</span>
+      </div>
+    </a>
+
+    <a href="letters.html" class="essay-card reveal">
+      <div class="essay-tag">Funny · Life</div>
+      <h3 class="essay-title">The goat that ate my entire bag and what it taught me</h3>
+      <p class="essay-excerpt">My notebook, two dates, a prayer rug, and my dignity. All gone in four minutes.</p>
+      <div class="essay-meta"><span>4 min read</span></div>
+    </a>
+
+    <a href="letters.html" class="essay-card reveal">
+      <div class="essay-tag">Faith · Quiet</div>
+      <h3 class="essay-title">Being Muslim in the wild feels different. More honest.</h3>
+      <p class="essay-excerpt">No performance. No audience. Just you, the earth, and whatever made it all.</p>
+      <div class="essay-meta"><span>6 min read</span></div>
+    </a>
+
+    <a href="letters.html" class="essay-card reveal">
+      <div class="essay-tag">Wisdom · One idea</div>
+      <h3 class="essay-title">Stop explaining yourself to people who chose not to understand</h3>
+      <p class="essay-excerpt">A fig tree I met in the mountains gave me this lesson completely for free.</p>
+      <div class="essay-meta"><span>3 min read</span></div>
+    </a>
+
+    <a href="letters.html" class="essay-card reveal">
+      <div class="essay-tag">Adventure · Honest</div>
+      <h3 class="essay-title">I got completely lost. It was the best day.</h3>
+      <p class="essay-excerpt">GPS off. Map wrong. Heart alive. Sometimes the trail you weren't supposed to take is the right one.</p>
+      <div class="essay-meta"><span>5 min read</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars">
+  <div class="pillars-inner">
+    <div class="pillars-header reveal">
+      <p class="pillars-eyebrow">What this place is about</p>
+      <h2 class="pillars-title">Four things I live by</h2>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar reveal">
+        <div class="pillar-number">01</div>
+        <h3 class="pillar-title">Wild & free</h3>
+        <p class="pillar-text">Nature is the best teacher, the best therapist, and the best comedian. I live in it as much as I can and write down what it tells me.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-number">02</div>
+        <h3 class="pillar-title">Quiet faith</h3>
+        <p class="pillar-text">No preaching. No pressure. Just a Muslim heart trying to live gently, honestly, and with gratitude for this strange, beautiful world.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-number">03</div>
+        <h3 class="pillar-title">Real laughter</h3>
+        <p class="pillar-text">Life is funny. Deeply, absurdly funny. The donkey that wouldn't move. The rain that came at exactly the wrong moment. I write it all down.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-number">04</div>
+        <h3 class="pillar-title">Honest ideas</h3>
+        <p class="pillar-text">Not advice from a guru. Just thoughts from someone sitting under a tree — about how to live better, lighter, and with less noise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE BAND -->
+<div class="quote-band">
+  <blockquote>"The world will always be loud. You don't have to be."</blockquote>
+  <cite>— The Wild Soul</cite>
+</div>
+
+<!-- ADVENTURES LIST -->
+<section class="adventures">
+  <div class="section-header reveal">
+    <h2 class="section-title">Field notes</h2>
+    <a href="adventures.html" class="section-link">All adventures →</a>
+  </div>
+
+  <div class="adventures-list">
+    <a href="adventures.html" class="adventure-item reveal">
+      <div class="adventure-num">01</div>
+      <div class="adventure-info">
+        <div class="adventure-title">Sleeping under stars with zero plan and zero regret</div>
+        <div class="adventure-desc">A night that cost nothing and gave everything</div>
+      </div>
+      <div class="adventure-tag">Night hike</div>
+    </a>
+    <a href="adventures.html" class="adventure-item reveal">
+      <div class="adventure-num">02</div>
+      <div class="adventure-info">
+        <div class="adventure-title">Making tea on a mountain at dawn while mist covered everything</div>
+        <div class="adventure-desc">Some moments you don't photograph. You just live them.</div>
+      </div>
+      <div class="adventure-tag">Mountains</div>
+    </a>
+    <a href="adventures.html" class="adventure-item reveal">
+      <div class="adventure-num">03</div>
+      <div class="adventure-info">
+        <div class="adventure-title">Swimming in a river alone and feeling completely okay about being alive</div>
+        <div class="adventure-desc">Cold water is an honest conversation with yourself</div>
+      </div>
+      <div class="adventure-tag">Water</div>
+    </a>
+    <a href="adventures.html" class="adventure-item reveal">
+      <div class="adventure-num">04</div>
+      <div class="adventure-info">
+        <div class="adventure-title">Talking to a farmer for three hours about rain and wisdom</div>
+        <div class="adventure-desc">He never read a self-help book. He knew everything.</div>
+      </div>
+      <div class="adventure-tag">People</div>
+    </a>
+    <a href="adventures.html" class="adventure-item reveal">
+      <div class="adventure-num">05</div>
+      <div class="adventure-info">
+        <div class="adventure-title">Getting rained on mid-prayer and laughing through the whole thing</div>
+        <div class="adventure-desc">Allah has a sense of humor. I'm convinced.</div>
+      </div>
+      <div class="adventure-tag">Faith · Funny</div>
+    </a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <p class="newsletter-label">Stay in the wild</p>
+  <h2 class="newsletter-title">A letter, now and then.<br><em>No schedule. No algorithm.</em></h2>
+  <p class="newsletter-sub">When I have something worth saying, I'll write. That's it.</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="Your email, quietly">
+    <button class="newsletter-btn">Send it</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">The Wild Soul</a>
+  <ul class="footer-links">
+    <li><a href="letters.html">Letters</a></li>
+    <li><a href="adventures.html">Adventures</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="index-ar.html">العربية</a></li>
+  </ul>
+  <div class="footer-bismillah">Written with gratitude · بسم الله</div>
+</footer>
+
+<script>
+  // ── DARK MODE ──
+  const toggle = document.getElementById('theme-toggle');
+  const icon = document.getElementById('theme-icon');
+  const html = document.documentElement;
+
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+  icon.textContent = saved === 'dark' ? '🌙' : '☀️';
+
+  toggle.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    icon.textContent = next === 'dark' ? '🌙' : '☀️';
+  });
+
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
